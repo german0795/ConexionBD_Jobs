@@ -15,8 +15,8 @@ namespace ConexionBD_Jobs
 
         public int JobId { get { return jobId; } set { jobId = value; } }
         public string JobTitle { get { return jobTitle; } set { jobTitle = value; } }
-        public decimal? JobMinSalary { get { return minSalary; } set { minSalary = value; } }
-        public decimal? JobMaxSalary { get { return maxSalary; } set { maxSalary = value; } }
+        public decimal? MinSalary { get { return minSalary; } set { minSalary = value; } }
+        public decimal? MaxSalary { get { return maxSalary; } set { maxSalary = value; } }
         public Job() { }
         public Job(int id, string jobName, decimal? minSal, decimal? maxSal)
         {
@@ -33,9 +33,9 @@ namespace ConexionBD_Jobs
         }
         public override string ToString()
         {
-            return $"ID {JobId}," +
-                   $"{JobTitle}," +
-                   $"Salary {JobMinSalary} - {JobMaxSalary}";
+            return $"{JobId}. " +
+                   $"{JobTitle} " +
+                   $"({MinSalary}€ - {MaxSalary}€)";
         }
     }
 }

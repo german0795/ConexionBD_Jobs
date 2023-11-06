@@ -13,9 +13,6 @@ namespace ConexionBD_Jobs
 {
     public partial class Form1 : Form
     {
-        decimal? minSalary;
-        decimal? maxSalary;
-        
         static string ConnectionString = @"Data source = 79.143.90.12,54321;
                                         Initial Catalog = GermanEmployees;
                                         Persist Security Info = true;
@@ -33,14 +30,22 @@ namespace ConexionBD_Jobs
             Job newJob = new Job(textBox1.Text, int.Parse(textBox2.Text), int.Parse(textBox3.Text));
             try
             {
-                string query = $"INSERT INTO jobs (job_title, min_salary, max_salary)" +
+                /*string query = $"INSERT INTO jobs (job_title, min_salary, max_salary)" +
                     $"VALUES ('{newJob.JobTitle}',{newJob.JobMinSalary}, {newJob.JobMaxSalary});" +
-                    $"SELECT SCOPE_IDENTITY();";
+                    $"SELECT SCOPE_IDENTITY();";*/
+                string query = "INSERT INTO jobs (job_title, min_salary, max_salary)" +
+                    "VALUES (@jobTitle, @minSalary, @maxSalary);" +
+                    "SELECT SCOPE_IDENTITY();";
 
-                SqlCommand command = new SqlCommand(query, connection);
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@jobTitle", newJob.JobTitle);
+                    command.Parameters.AddWithValue("@minSalary", newJob.MinSalary);
+                    command.Parameters.AddWithValue("@maxSalary", newJob.MaxSalary);
+                    object id = command.ExecuteScalar();
+                    newJob.JobId = int.Parse(id.ToString());
+                }
 
-                object id = command.ExecuteScalar();
-                newJob.JobId = int.Parse(id.ToString());
             }
             catch (SqlException ex)
             {
@@ -104,6 +109,7 @@ namespace ConexionBD_Jobs
                 connection.Open();
 
                 label1.Text = "Conectado";
+                label1.BackColor = Color.Green;
             }
             catch(SqlException ex) 
             {
@@ -115,6 +121,7 @@ namespace ConexionBD_Jobs
         {
             connection.Close();
             label1.Text = "No Conectado";
+            label1.BackColor = Color.Red;
         }
 
         private void button3_Click(object sender, EventArgs e)
